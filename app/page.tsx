@@ -65,8 +65,80 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Function vs Component Caching */}
+      <section className="border-b border-[#333] animate-slide-up stagger-3">
+        <div className="max-w-5xl mx-auto px-6 py-12">
+          <div className="flex items-start gap-4 mb-8">
+            <div className="w-1 h-full bg-[#f97316] rounded-full self-stretch" />
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Cache the Data, Not the Component</h2>
+              <p className="text-[#888] leading-relaxed">
+                Where you place <code className="px-2 py-0.5 bg-[#1a1a1a] rounded text-sm font-mono text-white">&quot;use cache&quot;</code> matters.
+                Caching the <span className="text-white font-medium">data function</span> gives you precise invalidation control.
+                Caching the <span className="text-white font-medium">component</span> embeds its output in the static shell, causing cascading re-renders.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Wrong: Cached Component */}
+            <div className="p-5 rounded-lg border border-[#333] bg-[#0a0a0a]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-[#ef4444]" />
+                <span className="text-sm font-medium text-[#ef4444]">Avoid: Cached Component</span>
+              </div>
+              <pre className="text-xs font-mono text-[#888] bg-[#111] p-3 rounded overflow-x-auto mb-3">
+{`async function Header() {
+  "use cache: remote";
+  cacheTag("header");
+  const data = new Date();
+  return <header>...</header>;
+}`}
+              </pre>
+              <p className="text-xs text-[#888] leading-relaxed">
+                The entire JSX output is cached and <span className="text-[#ef4444]">embedded in the static shell</span>.
+                Invalidating this tag forces the shell to regenerate, potentially re-rendering sibling components too.
+              </p>
+            </div>
+
+            {/* Right: Cached Data Function */}
+            <div className="p-5 rounded-lg border border-[#333] bg-[#0a0a0a]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-[#00d991]" />
+                <span className="text-sm font-medium text-[#00d991]">Prefer: Cached Data Function</span>
+              </div>
+              <pre className="text-xs font-mono text-[#888] bg-[#111] p-3 rounded overflow-x-auto mb-3">
+{`async function getHeaderData() {
+  "use cache: remote";
+  cacheTag("header");
+  return { cachedAt: new Date() };
+}
+
+async function Header() {
+  const data = await getHeaderData();
+  return <header>...</header>;
+}`}
+              </pre>
+              <p className="text-xs text-[#888] leading-relaxed">
+                Only the data is cached. The component renders dynamically using cached data.
+                Invalidating this tag <span className="text-[#00d991]">only affects the data</span>—other cache entries stay intact.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 rounded-lg border border-[#333] bg-[#0a0a0a]/50">
+            <p className="text-sm text-[#888]">
+              <span className="text-white font-medium">Why it matters:</span> When <code className="px-1.5 py-0.5 bg-[#1a1a1a] rounded text-xs font-mono">use cache</code> is
+              on a component, its rendered output becomes part of the page&apos;s static shell. Revalidating triggers shell regeneration,
+              which can cascade to re-render other components on the page—even if their cache tags weren&apos;t invalidated.
+              With data function caching, only the data layer is affected, preserving true O(1) invalidation.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Version Cards */}
-      <section className="animate-slide-up stagger-3">
+      <section className="animate-slide-up stagger-4">
         <div className="max-w-5xl mx-auto px-6 py-12 space-y-6">
           <VersionCard
             version="v0"
@@ -123,7 +195,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#333] animate-slide-up stagger-4">
+      <footer className="border-t border-[#333] animate-slide-up stagger-5">
         <div className="max-w-5xl mx-auto px-6 py-12">
           <div className="grid md:grid-cols-2 gap-8">
             <div>

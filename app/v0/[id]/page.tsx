@@ -23,12 +23,16 @@ export async function generateStaticParams() {
   }));
 }
 
-async function V0ProductContent({ id }: { id: string }) {
+async function getProductData(id: string) {
   "use cache: remote";
   cacheLife("days");
   cacheTag(`v0-product-${id}`);
 
-  const cachedAt = new Date();
+  return { cachedAt: new Date() };
+}
+
+async function V0ProductContent({ id }: { id: string }) {
+  const { cachedAt } = await getProductData(id);
 
   return (
     <div className="px-6 py-8">

@@ -14,12 +14,16 @@ function FormattedTime({ date }: { date: Date }) {
   );
 }
 
-export async function V3Header() {
+async function getHeaderData() {
   "use cache";
   cacheLife("days");
   cacheTag("v3-header");
 
-  const cachedAt = new Date();
+  return { cachedAt: new Date() };
+}
+
+export async function V3Header() {
+  const { cachedAt } = await getHeaderData();
 
   return (
     <header className="border-b border-zinc-200 dark:border-zinc-800 px-6 py-4 bg-zinc-50 dark:bg-zinc-900">
