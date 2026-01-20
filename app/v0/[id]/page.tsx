@@ -23,11 +23,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function V0ProductPage({ params }: V0ProductPageProps) {
+async function V0ProductContent({ id }: { id: string }) {
   "use cache";
   cacheLife("days");
-  const { id } = await params;
-
   cacheTag(`v0-product-${id}`);
 
   const cachedAt = new Date();
@@ -45,4 +43,9 @@ export default async function V0ProductPage({ params }: V0ProductPageProps) {
       </div>
     </div>
   );
+}
+
+export default async function V0ProductPage({ params }: V0ProductPageProps) {
+  const { id } = await params;
+  return <V0ProductContent id={id} />;
 }
