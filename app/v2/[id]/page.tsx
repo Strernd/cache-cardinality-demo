@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { cacheTag, cacheLife } from "next/cache";
 import { V2Header } from "@/app/components/V2Header";
 
@@ -52,8 +53,12 @@ export default async function V2ProductPage({ params }: V2ProductPageProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-100 dark:bg-zinc-900 p-4">
       <div className="w-full max-w-md rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-lg overflow-hidden">
-        <V2Header />
-        <V2ProductContent id={id} />
+        <Suspense fallback={<div className="px-6 py-4 bg-zinc-50 dark:bg-zinc-900">Loading header...</div>}>
+          <V2Header />
+        </Suspense>
+        <Suspense fallback={<div className="px-6 py-8">Loading...</div>}>
+          <V2ProductContent id={id} />
+        </Suspense>
       </div>
     </div>
   );
