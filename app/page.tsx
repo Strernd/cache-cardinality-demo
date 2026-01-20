@@ -1,65 +1,108 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen p-8 max-w-2xl mx-auto">
+      <h1 className="text-3xl font-bold mb-2">Cache Invalidation Demo</h1>
+      <p className="text-zinc-600 dark:text-zinc-400 mb-8">
+        Next.js 16 cache tags demonstration with 999 pages each
+      </p>
+
+      <div className="space-y-8">
+        <section>
+          <h2 className="text-xl font-semibold mb-3">Invalidation UI</h2>
+          <a
+            href="/invalidate"
+            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Open Invalidation Panel
+          </a>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold mb-1">v1: Products</h2>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
+            Header rendered in layout · Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">product-[id]</code>
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+          <div className="flex flex-wrap gap-2">
+            {[1, 25, 50, 100, 250, 500, 750, 999].map((id) => (
+              <a
+                key={id}
+                href={`/products/${id}`}
+                className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+              >
+                Product {id}
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold mb-1">v2: Items</h2>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
+            Banner rendered in page · Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">banner</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">item-[id]</code>
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {[1, 25, 50, 100, 250, 500, 750, 999].map((id) => (
+              <a
+                key={id}
+                href={`/items/${id}`}
+                className="px-4 py-2 bg-blue-100 dark:bg-blue-900 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+              >
+                Item {id}
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold mb-1">v3: Things</h2>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
+            NavBar (displays id) in page · Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">navbar</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">thing-[id]</code>
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {[1, 25, 50, 100, 250, 500, 750, 999].map((id) => (
+              <a
+                key={id}
+                href={`/things/${id}`}
+                className="px-4 py-2 bg-green-100 dark:bg-green-900 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+              >
+                Thing {id}
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="text-sm text-zinc-600 dark:text-zinc-400 space-y-4">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+            Key Differences
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
+              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">v1: Header in Layout</h3>
+              <p>Header is in the layout. One shared <code className="bg-zinc-200 dark:bg-zinc-700 px-1 rounded text-xs">header</code> tag for all products.</p>
+            </div>
+            <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">v2: Banner in Page</h3>
+              <p>Banner is in the page. One shared <code className="bg-zinc-200 dark:bg-zinc-700 px-1 rounded text-xs">banner</code> tag for all items.</p>
+            </div>
+            <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">v3: NavBar with ID</h3>
+              <p>NavBar takes id prop and displays it. One shared <code className="bg-zinc-200 dark:bg-zinc-700 px-1 rounded text-xs">navbar</code> tag.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="text-sm text-zinc-600 dark:text-zinc-400 space-y-2">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+            How to test
+          </h2>
+          <ul className="list-disc list-inside space-y-1">
+            <li>Visit a product/item page and note both timestamps</li>
+            <li>Go to the invalidation panel and invalidate a tag</li>
+            <li>Hard refresh the page to see the updated timestamp</li>
+            <li>Compare behavior between v1 and v2 when invalidating header/banner</li>
+          </ul>
+        </section>
+      </div>
     </div>
   );
 }
