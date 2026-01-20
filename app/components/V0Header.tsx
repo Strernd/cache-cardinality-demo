@@ -1,4 +1,4 @@
-import { cacheTag } from "next/cache";
+import { cacheTag, cacheLife } from "next/cache";
 import Link from "next/link";
 
 function FormattedTime({ date }: { date: Date }) {
@@ -16,6 +16,7 @@ function FormattedTime({ date }: { date: Date }) {
 
 export async function V0Header() {
   "use cache";
+  cacheLife("days");
   cacheTag("v0-header");
 
   const cachedAt = new Date();

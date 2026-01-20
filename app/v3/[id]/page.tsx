@@ -1,4 +1,4 @@
-import { cacheTag } from "next/cache";
+import { cacheTag, cacheLife } from "next/cache";
 import { V3Header } from "@/app/components/V3Header";
 
 interface V3ProductPageProps {
@@ -26,6 +26,7 @@ export async function generateStaticParams() {
 
 async function V3ProductContent({ id }: { id: string }) {
   "use cache";
+  cacheLife("days");
   cacheTag(`v3-product-${id}`);
 
   const cachedAt = new Date();

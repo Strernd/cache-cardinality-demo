@@ -1,4 +1,4 @@
-import { cacheTag } from "next/cache";
+import { cacheTag, cacheLife } from "next/cache";
 
 function FormattedTime({ date }: { date: Date }) {
   const hours = date.getHours().toString().padStart(2, "0");
@@ -15,6 +15,7 @@ function FormattedTime({ date }: { date: Date }) {
 
 export async function V2Header() {
   "use cache";
+  cacheLife("days");
   cacheTag("v2-header");
 
   const cachedAt = new Date();

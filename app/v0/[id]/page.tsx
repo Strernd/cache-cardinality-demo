@@ -1,4 +1,4 @@
-import { cacheTag } from "next/cache";
+import { cacheTag, cacheLife } from "next/cache";
 
 interface V0ProductPageProps {
   params: Promise<{ id: string }>;
@@ -25,6 +25,7 @@ export async function generateStaticParams() {
 
 export default async function V0ProductPage({ params }: V0ProductPageProps) {
   "use cache";
+  cacheLife("days");
   const { id } = await params;
 
   cacheTag(`v0-product-${id}`);

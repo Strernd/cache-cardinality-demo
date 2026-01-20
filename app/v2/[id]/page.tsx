@@ -1,4 +1,4 @@
-import { cacheTag } from "next/cache";
+import { cacheTag, cacheLife } from "next/cache";
 import { V2Header } from "@/app/components/V2Header";
 
 interface V2ProductPageProps {
@@ -26,6 +26,7 @@ export async function generateStaticParams() {
 
 async function V2ProductContent({ id }: { id: string }) {
   "use cache";
+  cacheLife("days");
   cacheTag(`v2-product-${id}`);
 
   const cachedAt = new Date();

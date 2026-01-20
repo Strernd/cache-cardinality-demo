@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { invalidateTag } from "./actions";
+import { revalidateTagAction, updateTagAction } from "./actions";
 
 export default function InvalidatePage() {
   const [tag, setTag] = useState("");
@@ -11,8 +11,8 @@ export default function InvalidatePage() {
     e.preventDefault();
     if (!tag.trim()) return;
 
-    setStatus("Invalidating...");
-    const result = await invalidateTag(tag.trim());
+    setStatus("Calling revalidateTag...");
+    const result = await revalidateTagAction(tag.trim());
     setStatus(result.message);
     setTag("");
   }
@@ -34,7 +34,20 @@ export default function InvalidatePage() {
             type="submit"
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Invalidate
+            revalidateTag
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              if (!tag.trim()) return;
+              setStatus("Calling updateTag...");
+              const result = await updateTagAction(tag.trim());
+              setStatus(result.message);
+              setTag("");
+            }}
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            updateTag
           </button>
         </div>
       </form>

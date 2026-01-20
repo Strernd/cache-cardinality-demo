@@ -1,8 +1,13 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 
-export async function invalidateTag(tag: string) {
-  revalidateTag(tag, "default");
-  return { message: `Invalidated tag: ${tag}` };
+export async function revalidateTagAction(tag: string) {
+  revalidateTag(tag, "max");
+  return { message: `revalidateTag("${tag}", "max")` };
+}
+
+export async function updateTagAction(tag: string) {
+  updateTag(tag);
+  return { message: `updateTag("${tag}")` };
 }
