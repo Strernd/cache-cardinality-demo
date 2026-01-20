@@ -1,5 +1,12 @@
 import { cacheTag, cacheLife } from "next/cache";
 
+async function getV2HeaderData() {
+  "use cache";
+  cacheLife("days");
+  cacheTag("v2-header");
+  return { cachedAt: new Date() };
+}
+
 function FormattedTime({ date }: { date: Date }) {
   const hours = date.getHours().toString().padStart(2, "0");
   const minutes = date.getMinutes().toString().padStart(2, "0");
@@ -14,11 +21,7 @@ function FormattedTime({ date }: { date: Date }) {
 }
 
 export async function V2Header() {
-  "use cache";
-  cacheLife("days");
-  cacheTag("v2-header");
-
-  const cachedAt = new Date();
+  const { cachedAt } = await getV2HeaderData();
 
   return (
     <div className="border-b border-zinc-200 dark:border-zinc-800 px-6 py-4 bg-zinc-50 dark:bg-zinc-900">

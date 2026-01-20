@@ -1,3 +1,8 @@
+"use client";
+
+import { useState } from "react";
+import { revalidateTagAction, updateTagAction } from "./invalidate/actions";
+
 export default function Home() {
   return (
     <div className="min-h-screen p-8 max-w-3xl mx-auto">
@@ -18,7 +23,10 @@ export default function Home() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold mb-1">v0: Header in root layout</h2>
+          <div className="flex items-center gap-3 mb-1">
+            <h2 className="text-xl font-semibold">v0: Header in root layout</h2>
+            <TagButtons tag="v0-header" />
+          </div>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
             Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v0-header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v0-product-[id]</code>
           </p>
@@ -36,7 +44,10 @@ export default function Home() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold mb-1">v1: Header in product layout</h2>
+          <div className="flex items-center gap-3 mb-1">
+            <h2 className="text-xl font-semibold">v1: Header in product layout</h2>
+            <TagButtons tag="v1-header" />
+          </div>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
             Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v1-header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v1-product-[id]</code>
           </p>
@@ -54,7 +65,10 @@ export default function Home() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold mb-1">v2: Header in page</h2>
+          <div className="flex items-center gap-3 mb-1">
+            <h2 className="text-xl font-semibold">v2: Header in page</h2>
+            <TagButtons tag="v2-header" />
+          </div>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
             Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v2-header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v2-product-[id]</code>
           </p>
@@ -72,7 +86,10 @@ export default function Home() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold mb-1">v3: Header (with id prop) in page</h2>
+          <div className="flex items-center gap-3 mb-1">
+            <h2 className="text-xl font-semibold">v3: Header (with id prop) in page</h2>
+            <TagButtons tag="v3-header" />
+          </div>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
             Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v3-header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v3-product-[id]</code>
           </p>
@@ -126,5 +143,47 @@ export default function Home() {
         </section>
       </div>
     </div>
+  );
+}
+
+function TagButtons({ tag }: { tag: string }) {
+  const [status, setStatus] = useState<string | null>(null);
+
+  const handleRevalidate = async () => {
+    const result = await revalidateTagAction(tag);
+    setStatus(result.message);
+    setTimeout(() => setStatus(null), 2000);
+  };
+
+  const handleUpdate = async () => {
+    const result = await updateTagAction(tag);
+    setStatus(result.message);
+    setTimeout(() => setStatus(null), 2000);
+  };
+
+  return (
+    <span className="flex items-center gap-2">
+      <span className="flex gap-1">
+        <button
+          type="button"
+          onClick={handleRevalidate}
+          className="px-2 py-0.5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors cursor-pointer"
+        >
+          revalidate
+        </button>
+        <button
+          type="button"
+          onClick={handleUpdate}
+          className="px-2 py-0.5 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors cursor-pointer"
+        >
+          update
+        </button>
+      </span>
+      {status && (
+        <span className="text-xs text-zinc-500 dark:text-zinc-400 animate-pulse">
+          ✓ {status}
+        </span>
+      )}
+    </span>
   );
 }

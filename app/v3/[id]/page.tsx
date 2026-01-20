@@ -6,6 +6,13 @@ interface V3ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
+async function getV3ProductData(id: string) {
+  "use cache";
+  cacheLife("days");
+  cacheTag(`v3-product-${id}`);
+  return { cachedAt: new Date() };
+}
+
 function FormattedTime({ date }: { date: Date }) {
   const hours = date.getHours().toString().padStart(2, "0");
   const minutes = date.getMinutes().toString().padStart(2, "0");
@@ -26,11 +33,7 @@ export async function generateStaticParams() {
 }
 
 async function V3ProductContent({ id }: { id: string }) {
-  "use cache";
-  cacheLife("days");
-  cacheTag(`v3-product-${id}`);
-
-  const cachedAt = new Date();
+  const { cachedAt } = await getV3ProductData(id);
 
   return (
     <div className="px-6 py-8">
