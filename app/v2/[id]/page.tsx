@@ -1,7 +1,7 @@
 import { cacheTag } from "next/cache";
-import { Banner } from "@/app/components/Banner";
+import { V2Header } from "@/app/components/V2Header";
 
-interface ItemPageProps {
+interface V2ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
@@ -24,35 +24,35 @@ export async function generateStaticParams() {
   }));
 }
 
-async function ItemContent({ id }: { id: string }) {
+async function V2ProductContent({ id }: { id: string }) {
   "use cache";
-  cacheTag(`item-${id}`);
+  cacheTag(`v2-product-${id}`);
 
   const cachedAt = new Date();
 
   return (
     <div className="px-6 py-8">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-        Item {id}
+        Product {id}
       </h1>
       <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 flex items-center gap-2">
         page cached at <FormattedTime date={cachedAt} />
       </p>
       <div className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
-        <p>Cache tag: <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs">item-{id}</code></p>
+        <p>Cache tag: <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs">v2-product-{id}</code></p>
       </div>
     </div>
   );
 }
 
-export default async function ItemPage({ params }: ItemPageProps) {
+export default async function V2ProductPage({ params }: V2ProductPageProps) {
   const { id } = await params;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-100 dark:bg-zinc-900 p-4">
       <div className="w-full max-w-md rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-lg overflow-hidden">
-        <Banner />
-        <ItemContent id={id} />
+        <V2Header />
+        <V2ProductContent id={id} />
       </div>
     </div>
   );

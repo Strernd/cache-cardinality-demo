@@ -1,7 +1,6 @@
 import { cacheTag } from "next/cache";
-import { NavBar } from "@/app/components/NavBar";
 
-interface ThingPageProps {
+interface V1ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
@@ -24,35 +23,24 @@ export async function generateStaticParams() {
   }));
 }
 
-async function ThingContent({ id }: { id: string }) {
+export default async function V1ProductPage({ params }: V1ProductPageProps) {
   "use cache";
-  cacheTag(`thing-${id}`);
+  const { id } = await params;
+
+  cacheTag(`v1-product-${id}`);
 
   const cachedAt = new Date();
 
   return (
     <div className="px-6 py-8">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-        Thing {id}
+        Product {id}
       </h1>
       <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 flex items-center gap-2">
         page cached at <FormattedTime date={cachedAt} />
       </p>
       <div className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
-        <p>Cache tag: <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs">thing-{id}</code></p>
-      </div>
-    </div>
-  );
-}
-
-export default async function ThingPage({ params }: ThingPageProps) {
-  const { id } = await params;
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-100 dark:bg-zinc-900 p-4">
-      <div className="w-full max-w-md rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-lg overflow-hidden">
-        <NavBar id={id} />
-        <ThingContent id={id} />
+        <p>Cache tag: <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs">v1-product-{id}</code></p>
       </div>
     </div>
   );

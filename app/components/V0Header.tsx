@@ -1,4 +1,5 @@
 import { cacheTag } from "next/cache";
+import Link from "next/link";
 
 function FormattedTime({ date }: { date: Date }) {
   const hours = date.getHours().toString().padStart(2, "0");
@@ -13,20 +14,22 @@ function FormattedTime({ date }: { date: Date }) {
   );
 }
 
-export async function NavBar({ id }: { id: string }) {
+export async function V0Header() {
   "use cache";
-  cacheTag("navbar");
+  cacheTag("v0-header");
 
   const cachedAt = new Date();
 
   return (
-    <div className="border-b border-zinc-200 dark:border-zinc-800 px-6 py-4 bg-zinc-50 dark:bg-zinc-900">
-      <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-        Cache Demo v3 · Thing {id}
+    <header className="border-b border-zinc-200 dark:border-zinc-800 px-6 py-4 bg-zinc-50 dark:bg-zinc-900">
+      <div className="flex items-center justify-between">
+        <Link href="/" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          v0: Header in root layout
+        </Link>
       </div>
       <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 flex items-center gap-2">
-        navbar cached at <FormattedTime date={cachedAt} />
+        header cached at <FormattedTime date={cachedAt} />
       </p>
-    </div>
+    </header>
   );
 }

@@ -1,6 +1,6 @@
 import { cacheTag } from "next/cache";
 
-interface ProductPageProps {
+interface V0ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
@@ -23,11 +23,11 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function V0ProductPage({ params }: V0ProductPageProps) {
   "use cache";
   const { id } = await params;
 
-  cacheTag(`product-${id}`);
+  cacheTag(`v0-product-${id}`);
 
   const cachedAt = new Date();
 
@@ -40,7 +40,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         page cached at <FormattedTime date={cachedAt} />
       </p>
       <div className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
-        <p>Cache tag: <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs">product-{id}</code></p>
+        <p>Cache tag: <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs">v0-product-{id}</code></p>
       </div>
     </div>
   );
