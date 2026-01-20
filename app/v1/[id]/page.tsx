@@ -5,7 +5,7 @@ interface V1ProductPageProps {
 }
 
 async function getV1ProductData(id: string) {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag(`v1-product-${id}`);
   return { cachedAt: new Date() };

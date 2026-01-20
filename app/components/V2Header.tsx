@@ -1,7 +1,7 @@
 import { cacheTag, cacheLife } from "next/cache";
 
 async function getV2HeaderData() {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag("v2-header");
   return { cachedAt: new Date() };
