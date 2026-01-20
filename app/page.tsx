@@ -5,185 +5,293 @@ import { revalidateTagAction, updateTagAction } from "./invalidate/actions";
 
 export default function Home() {
   return (
-    <div className="min-h-screen p-8 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-2">Cache Invalidation Demo</h1>
-      <p className="text-zinc-600 dark:text-zinc-400 mb-8">
-        Next.js 16 cache tags demonstration with 999 pages each
-      </p>
-
-      <div className="space-y-8">
-        <section>
-          <h2 className="text-xl font-semibold mb-3">Invalidation UI</h2>
-          <a
-            href="/invalidate"
-            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Open Invalidation Panel
-          </a>
-        </section>
-
-        <section>
-          <div className="flex items-center gap-3 mb-1">
-            <h2 className="text-xl font-semibold">v0: Header in root layout</h2>
-            <TagButtons tag="v0-header" />
-          </div>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
-            Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v0-header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v0-product-[id]</code>
+    <div className="min-h-screen bg-black text-white">
+      {/* Hero Section */}
+      <header className="border-b border-[#333] animate-fade-in">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <p className="text-[#888] text-sm font-mono mb-4">Next.js 16</p>
+          <h1 className="text-5xl font-bold tracking-tight mb-4">
+            Cache Cardinality
+          </h1>
+          <p className="text-xl text-[#888] max-w-2xl">
+            Understanding how cache tag invalidation scales across different component architectures.
           </p>
-          <div className="flex flex-wrap gap-2">
-            {[1, 25, 50, 100, 250, 500, 750, 999].map((id) => (
-              <a
-                key={id}
-                href={`/v0/${id}`}
-                className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
-              >
-                Product {id}
-              </a>
-            ))}
-          </div>
-        </section>
+        </div>
+      </header>
 
-        <section>
-          <div className="flex items-center gap-3 mb-1">
-            <h2 className="text-xl font-semibold">v1: Header in product layout</h2>
-            <TagButtons tag="v1-header" />
-          </div>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
-            Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v1-header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v1-product-[id]</code>
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {[1, 25, 50, 100, 250, 500, 750, 999].map((id) => (
-              <a
-                key={id}
-                href={`/v1/${id}`}
-                className="px-4 py-2 bg-blue-100 dark:bg-blue-900 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-              >
-                Product {id}
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <div className="flex items-center gap-3 mb-1">
-            <h2 className="text-xl font-semibold">v2: Header in page</h2>
-            <TagButtons tag="v2-header" />
-          </div>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
-            Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v2-header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v2-product-[id]</code>
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {[1, 25, 50, 100, 250, 500, 750, 999].map((id) => (
-              <a
-                key={id}
-                href={`/v2/${id}`}
-                className="px-4 py-2 bg-green-100 dark:bg-green-900 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
-              >
-                Product {id}
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <div className="flex items-center gap-3 mb-1">
-            <h2 className="text-xl font-semibold">v3: Header (with id prop) in page</h2>
-            <TagButtons tag="v3-header" />
-          </div>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">
-            Tags: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v3-header</code>, <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">v3-product-[id]</code>
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {[1, 25, 50, 100, 250, 500, 750, 999].map((id) => (
-              <a
-                key={id}
-                href={`/v3/${id}`}
-                className="px-4 py-2 bg-purple-100 dark:bg-purple-900 rounded-lg hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
-              >
-                Product {id}
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section className="text-sm text-zinc-600 dark:text-zinc-400 space-y-4">
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-            Key Differences
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
-              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">v0: Header in root layout</h3>
-              <p>Header is in /v0/layout.tsx (above [id]). Shared <code className="bg-zinc-200 dark:bg-zinc-700 px-1 rounded text-xs">v0-header</code> tag.</p>
-            </div>
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">v1: Header in product layout</h3>
-              <p>Header is in /v1/[id]/layout.tsx. Shared <code className="bg-zinc-200 dark:bg-zinc-700 px-1 rounded text-xs">v1-header</code> tag.</p>
-            </div>
-            <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
-              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">v2: Header in page</h3>
-              <p>Header rendered directly in page.tsx. Shared <code className="bg-zinc-200 dark:bg-zinc-700 px-1 rounded text-xs">v2-header</code> tag.</p>
-            </div>
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-2">v3: Header with id prop</h3>
-              <p>Header receives id and displays it. Shared <code className="bg-zinc-200 dark:bg-zinc-700 px-1 rounded text-xs">v3-header</code> tag.</p>
+      {/* Goal Section */}
+      <section className="border-b border-[#333] animate-slide-up stagger-1">
+        <div className="max-w-5xl mx-auto px-6 py-12">
+          <div className="flex items-start gap-4">
+            <div className="w-1 h-full bg-[#0070f3] rounded-full self-stretch" />
+            <div>
+              <h2 className="text-lg font-semibold mb-2">The Goal</h2>
+              <p className="text-[#888] leading-relaxed">
+                When we call <code className="px-2 py-0.5 bg-[#1a1a1a] rounded text-sm font-mono text-white">revalidateTag(&quot;header&quot;)</code>,
+                only the header should be re-rendered. Product cache entries should remain untouched.
+                The <span className="text-white font-medium">cardinality</span> of this operation should be <span className="text-[#00d991] font-mono">O(1)</span>—one
+                header cache entry—not <span className="text-[#f5a623] font-mono">O(N)</span> where N is the number of pages.
+              </p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="text-sm text-zinc-600 dark:text-zinc-400 space-y-2">
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-            How to test
-          </h2>
-          <ul className="list-disc list-inside space-y-1">
-            <li>Visit a product page and note both timestamps</li>
-            <li>Go to the invalidation panel and invalidate a tag</li>
-            <li>Hard refresh the page to see the updated timestamp</li>
-            <li>Compare behavior across all versions</li>
-          </ul>
-        </section>
-      </div>
+      {/* Cache Explainer */}
+      <section className="border-b border-[#333] animate-slide-up stagger-2">
+        <div className="max-w-5xl mx-auto px-6 py-12">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="p-6 rounded-lg border border-[#333] bg-[#0a0a0a]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-[#00d991]" />
+                <code className="text-sm font-mono">&quot;use cache: remote&quot;</code>
+              </div>
+              <p className="text-sm text-[#888] leading-relaxed">
+                Stores cached output in a shared remote cache (Redis, KV). On Vercel, this is automatic.
+                All serverless instances share the same cache entries, providing consistent behavior and high hit rates.
+              </p>
+            </div>
+            <div className="p-6 rounded-lg border border-[#333] bg-[#0a0a0a]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-[#f5a623]" />
+                <code className="text-sm font-mono">&quot;use cache&quot;</code>
+              </div>
+              <p className="text-sm text-[#888] leading-relaxed">
+                Stores cached output in-memory per instance. In serverless, each instance has its own ephemeral cache—entries
+                are NOT shared, leading to redundant work and unpredictable invalidation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Version Cards */}
+      <section className="animate-slide-up stagger-3">
+        <div className="max-w-5xl mx-auto px-6 py-12 space-y-6">
+          <VersionCard
+            version="v0"
+            title="Header in root layout"
+            cacheType="remote"
+            status="works"
+            cardinality="1"
+            cardinalityLabel="One header cache entry"
+            description="Header and product have separate cache entries in a shared remote cache. Invalidating the header tag affects exactly 1 cache entry—the header. All 10 product cache entries remain untouched."
+            headerTag="v0-header"
+            productTag="v0-product-[id]"
+            color="emerald"
+          />
+
+          <VersionCard
+            version="v1"
+            title="Header in product layout"
+            cacheType="remote"
+            status="works"
+            cardinality="1"
+            cardinalityLabel="One header cache entry"
+            description="Even though the header is in [id]/layout.tsx, it has no props—so there's still only one cache entry shared across all products. Invalidation cardinality remains O(1)."
+            headerTag="v1-header"
+            productTag="v1-product-[id]"
+            color="blue"
+          />
+
+          <VersionCard
+            version="v2"
+            title="Header in page"
+            cacheType="remote"
+            status="works"
+            cardinality="1"
+            cardinalityLabel="One header cache entry"
+            description="Header rendered directly in page.tsx but still has no props. Cache key is determined by function ID + arguments. No arguments = single shared cache entry = O(1) invalidation."
+            headerTag="v2-header"
+            productTag="v2-product-[id]"
+            color="teal"
+          />
+
+          <VersionCard
+            version="v3"
+            title="Header in root layout"
+            cacheType="local"
+            status="fails"
+            cardinality="N"
+            cardinalityLabel="Per-instance cache"
+            description="Uses in-memory cache. Each serverless instance maintains its own cache. When you hit a different instance, both header and product may render fresh—appearing as if both were invalidated. Effective cardinality is O(instances × pages)."
+            headerTag="v3-header"
+            productTag="v3-product-[id]"
+            color="orange"
+          />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-[#333] animate-slide-up stagger-4">
+        <div className="max-w-5xl mx-auto px-6 py-12">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="font-semibold mb-3">How to Test</h3>
+              <ol className="text-sm text-[#888] space-y-2 list-decimal list-inside">
+                <li>Visit a product page and note both timestamps</li>
+                <li>Click &quot;revalidate header&quot; on this page</li>
+                <li>Hard refresh the product page</li>
+                <li>Only the header timestamp should change</li>
+              </ol>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-3">Deploy to See Full Effect</h3>
+              <p className="text-sm text-[#888] mb-4">
+                Local dev uses a single process. Deploy to Vercel to see the difference between remote and local cache across multiple serverless instances.
+              </p>
+              <a
+                href="/invalidate"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg font-medium text-sm hover:bg-[#eee] transition-colors"
+              >
+                Open Invalidation Panel
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
 
-function TagButtons({ tag }: { tag: string }) {
-  const [status, setStatus] = useState<string | null>(null);
+function VersionCard({
+  version,
+  title,
+  cacheType,
+  status,
+  cardinality,
+  cardinalityLabel,
+  description,
+  headerTag,
+  productTag,
+  color,
+}: {
+  version: string;
+  title: string;
+  cacheType: "remote" | "local";
+  status: "works" | "fails";
+  cardinality: string;
+  cardinalityLabel: string;
+  description: string;
+  headerTag: string;
+  productTag: string;
+  color: string;
+}) {
+  const [actionStatus, setActionStatus] = useState<string | null>(null);
 
   const handleRevalidate = async () => {
-    const result = await revalidateTagAction(tag);
-    setStatus(result.message);
-    setTimeout(() => setStatus(null), 2000);
+    const result = await revalidateTagAction(headerTag);
+    setActionStatus(result.message);
+    setTimeout(() => setActionStatus(null), 2000);
   };
 
   const handleUpdate = async () => {
-    const result = await updateTagAction(tag);
-    setStatus(result.message);
-    setTimeout(() => setStatus(null), 2000);
+    const result = await updateTagAction(headerTag);
+    setActionStatus(result.message);
+    setTimeout(() => setActionStatus(null), 2000);
+  };
+
+  const colorClasses = {
+    emerald: "border-l-[#00d991]",
+    blue: "border-l-[#0070f3]",
+    teal: "border-l-[#14b8a6]",
+    orange: "border-l-[#f5a623]",
   };
 
   return (
-    <span className="flex items-center gap-2">
-      <span className="flex gap-1">
-        <button
-          type="button"
-          onClick={handleRevalidate}
-          className="px-2 py-0.5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors cursor-pointer"
-        >
-          revalidate
-        </button>
-        <button
-          type="button"
-          onClick={handleUpdate}
-          className="px-2 py-0.5 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors cursor-pointer"
-        >
-          update
-        </button>
-      </span>
-      {status && (
-        <span className="text-xs text-zinc-500 dark:text-zinc-400 animate-pulse">
-          ✓ {status}
+    <div className={`p-6 rounded-lg border border-[#333] bg-[#0a0a0a] border-l-2 ${colorClasses[color as keyof typeof colorClasses]} hover:bg-[#111] transition-colors`}>
+      {/* Header Row */}
+      <div className="flex flex-wrap items-center gap-3 mb-4">
+        <span className="text-2xl font-bold font-mono">{version}</span>
+        <span className="text-[#888]">{title}</span>
+
+        {/* Badges */}
+        <span className={`px-2 py-0.5 text-xs font-mono rounded ${
+          cacheType === "remote"
+            ? "bg-[#00d991]/10 text-[#00d991]"
+            : "bg-[#f5a623]/10 text-[#f5a623]"
+        }`}>
+          {cacheType}
         </span>
-      )}
-    </span>
+
+        <span className={`px-2 py-0.5 text-xs font-semibold rounded ${
+          status === "works"
+            ? "bg-[#00d991] text-black"
+            : "bg-[#f5a623] text-black"
+        }`}>
+          {status === "works" ? "WORKS" : "FAILS"}
+        </span>
+
+        <div className="flex-1" />
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRevalidate}
+            className="px-3 py-1.5 text-xs font-medium bg-[#1a1a1a] border border-[#333] rounded hover:bg-[#222] hover:border-[#444] transition-colors"
+          >
+            revalidate header
+          </button>
+          <button
+            onClick={handleUpdate}
+            className="px-3 py-1.5 text-xs font-medium bg-[#1a1a1a] border border-[#333] rounded hover:bg-[#222] hover:border-[#444] transition-colors"
+          >
+            update header
+          </button>
+          {actionStatus && (
+            <span className="text-xs text-[#00d991] animate-pulse">
+              {actionStatus}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Cardinality Badge */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg ${
+          cardinality === "1"
+            ? "bg-[#00d991]/10 border border-[#00d991]/20"
+            : "bg-[#f5a623]/10 border border-[#f5a623]/20"
+        }`}>
+          <span className={`text-lg font-mono font-bold ${
+            cardinality === "1" ? "text-[#00d991]" : "text-[#f5a623]"
+          }`}>
+            O({cardinality})
+          </span>
+          <span className="text-xs text-[#888]">{cardinalityLabel}</span>
+        </div>
+      </div>
+
+      {/* Description */}
+      <p className="text-sm text-[#888] leading-relaxed mb-4">
+        {description}
+      </p>
+
+      {/* Tags */}
+      <div className="flex items-center gap-4 text-xs text-[#666] mb-4">
+        <span>
+          <code className="px-1.5 py-0.5 bg-[#1a1a1a] rounded font-mono">{headerTag}</code>
+        </span>
+        <span>
+          <code className="px-1.5 py-0.5 bg-[#1a1a1a] rounded font-mono">{productTag}</code>
+        </span>
+      </div>
+
+      {/* Product Links */}
+      <div className="flex flex-wrap gap-2">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((id) => (
+          <a
+            key={id}
+            href={`/${version}/${id}`}
+            className="px-3 py-1.5 text-sm font-mono bg-[#1a1a1a] border border-[#333] rounded hover:bg-[#222] hover:border-[#444] transition-colors"
+          >
+            {id}
+          </a>
+        ))}
+      </div>
+    </div>
   );
 }

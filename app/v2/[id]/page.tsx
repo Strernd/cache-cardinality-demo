@@ -6,13 +6,6 @@ interface V2ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
-async function getV2ProductData(id: string) {
-  "use cache: remote";
-  cacheLife("days");
-  cacheTag(`v2-product-${id}`);
-  return { cachedAt: new Date() };
-}
-
 function FormattedTime({ date }: { date: Date }) {
   const hours = date.getHours().toString().padStart(2, "0");
   const minutes = date.getMinutes().toString().padStart(2, "0");
@@ -27,13 +20,17 @@ function FormattedTime({ date }: { date: Date }) {
 }
 
 export async function generateStaticParams() {
-  return Array.from({ length: 999 }, (_, i) => ({
+  return Array.from({ length: 10 }, (_, i) => ({
     id: String(i + 1),
   }));
 }
 
 async function V2ProductContent({ id }: { id: string }) {
-  const { cachedAt } = await getV2ProductData(id);
+  "use cache: remote";
+  cacheLife("days");
+  cacheTag(`v2-product-${id}`);
+
+  const cachedAt = new Date();
 
   return (
     <div className="px-6 py-8">
